@@ -13,7 +13,7 @@ An automated **Indicator of Compromise (IoC)** enrichment tool with a Matrix-the
 
 ```bash
 # Clone the repo
-git clone https://github.com/Zangetsu-Python-Tools/senterator.git
+git clone https://github.com/Donato-Projects/Senterator.git
 cd senterator
 
 # Create and activate virtual environment
