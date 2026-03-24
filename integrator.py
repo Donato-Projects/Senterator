@@ -58,15 +58,15 @@ def run_local_analysis(filepath=None):
     Returns:
         dict: Analysis results matching Person 1's JSON format.
     """
-    if USE_MOCK_DATA:
+    if USE_MOCK_DATA and not filepath:
         return get_mock_local_analysis()
     else:
-        # TODO: Call Person 1's real code here
-        # Example:
-        # hashes = compute_hashes(filepath)
-        # suspicious = extract_suspicious_imports(filepath)
-        # return {"hashes": hashes, "suspicious_imports": suspicious, ...}
-        pass
+        # Call Person 1's real code
+        from local_analysis import compute_hashes, extract_suspicious_imports, export_json
+        hashes = compute_hashes(filepath)
+        suspicious = extract_suspicious_imports(filepath)
+        _, report = export_json(filepath, hashes, suspicious)
+        return report
 
 
 def run_threat_intel(sha256_hash=None):
@@ -80,13 +80,11 @@ def run_threat_intel(sha256_hash=None):
     Returns:
         dict: Threat intel results matching Person 2's JSON format.
     """
-    if USE_MOCK_DATA:
+    if USE_MOCK_DATA and not sha256_hash:
         return get_mock_threat_intel()
     else:
-        # TODO: Call Person 2's real code here
-        # Example:
-        # return lookup_virustotal(sha256_hash)
-        pass
+        from threat_intel import build_final_report
+        return build_final_report(sha256_hash)
 
 
 def run_verdict(local_data=None, threat_data=None):
@@ -101,10 +99,10 @@ def run_verdict(local_data=None, threat_data=None):
     Returns:
         dict: Verdict results matching Person 3's JSON format.
     """
-    if USE_MOCK_DATA:
+    if USE_MOCK_DATA and not (local_data and threat_data):
         return get_mock_verdict()
     else:
         # TODO: Call Person 3's real code here
-        # Example:
-        # return calculate_verdict(local_data, threat_data)
-        pass
+        # Fallback to mock data for now since Person 3 isn't ready
+        import mock_data
+        return mock_data.get_mock_verdict()

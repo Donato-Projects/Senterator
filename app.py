@@ -8,6 +8,9 @@ This is what your team will demo in the presentation.
 import streamlit as st
 import plotly.graph_objects as go
 import json
+import os
+import tempfile
+import hashlib
 from integrator import run_local_analysis, run_threat_intel, run_verdict
 
 # =============================================================
@@ -203,6 +206,8 @@ with st.sidebar:
 		help="Drop an ELF binary here for analysis"
 	)
 
+	analyze_btn = st.button("🔍 Analyze Uploaded Binary", use_container_width=True)
+
 	# OR use sample/mock data button
 	use_sample = st.button(
 		"⚡ Use Sample Data",
@@ -232,6 +237,24 @@ if use_sample:
         st.session_state["analysis"] = run_local_analysis()
         st.session_state["threat"] = run_threat_intel()
         st.session_state["verdict"] = run_verdict()
+
+if analyze_btn:
+    if uploaded_file is not None:
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(uploaded_file.getvalue())
+            tmp_file_path = tmp_file.name
+
+        file_bytes = uploaded_file.getvalue()
+        sha256_hash = hashlib.sha256(file_bytes).hexdigest()
+
+        with st.spinner("Analyzing binary..."):
+            st.session_state["analysis"] = run_local_analysis(filepath=tmp_file_path)
+            st.session_state["threat"] = run_threat_intel(sha256_hash=sha256_hash)
+            st.session_state["verdict"] = run_verdict(local_data=st.session_state["analysis"], threat_data=st.session_state["threat"])
+
+        os.remove(tmp_file_path)
+    else:
+        st.sidebar.warning("Please upload a file first!")
 
 # Check if we have data to display
 if "analysis" in st.session_state:

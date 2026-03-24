@@ -23,3 +23,6 @@ Thumbs.db
 
 # Analysis output files
 *_analysis.json
+
+# Environment Variables
+.env
