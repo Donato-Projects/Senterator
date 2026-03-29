@@ -102,7 +102,6 @@ def run_verdict(local_data=None, threat_data=None):
     if USE_MOCK_DATA and not (local_data and threat_data):
         return get_mock_verdict()
     else:
-        # TODO: Call Person 3's real code here
-        # Fallback to mock data for now since Person 3 isn't ready
-        import mock_data
-        return mock_data.get_mock_verdict()
+        from verdict import calculate_verdict
+        return calculate_verdict(local_data, threat_data)
+

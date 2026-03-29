@@ -236,7 +236,10 @@ st.markdown("---")
 if use_sample:
         st.session_state["analysis"] = run_local_analysis()
         st.session_state["threat"] = run_threat_intel()
-        st.session_state["verdict"] = run_verdict()
+        st.session_state["verdict"] = run_verdict(
+            local_data=st.session_state["analysis"],
+            threat_data=st.session_state["threat"]
+        )
 
 if analyze_btn:
     if uploaded_file is not None:
